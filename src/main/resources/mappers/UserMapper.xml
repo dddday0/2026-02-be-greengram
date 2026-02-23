@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.green.greengram.application.user.UserMapper">
-    <insert id="signup" useGeneratedKeys="true" keyProperty="id">
+    <insert id="signUp" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user
         SET uid = #{uid}
         , upw = #{upw}
@@ -15,4 +15,42 @@
         WHERE uid = #{uid}
     </select>
 
+    <select id="findById">
+        SELECT id, uid, upw, nm, pic, created_at
+        FROM user
+        WHERE id = #{id}
+    </select>
+
+    <select id="findProfileUser">
+        SELECT u.id, u.pic, u.created_at, u.uid, u.nm
+        , count(DISTINCT f.id) AS feedCount
+        FROM user u
+        LEFT JOIN feed f
+        ON f.user_id = u.id
+        WHERE u.id = #{profileUserId}
+    </select>
+
+    <update id="updUser">
+        UPDATE user
+        SET
+        <choose>
+            <when test="upw != null">
+                upw = #{upw}
+            </when>
+            <when test="nm != null">
+                nm = #{nm}
+            </when>
+            <when test="pic != null">
+                <choose>
+                    <when test=" pic == '' "> <!-- 빈문자열이 오면 사진 삭제 -->
+                        pic = null
+                    </when>
+                    <otherwise> <!-- pic 내용 수정 -->
+                        pic = #{pic}
+                    </otherwise>
+                </choose>
+            </when>
+        </choose>
+        WHERE id = #{id}
+    </update>
 </mapper>

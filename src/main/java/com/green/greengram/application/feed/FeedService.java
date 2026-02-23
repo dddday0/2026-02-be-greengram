@@ -6,12 +6,14 @@ import com.green.greengram.application.feed.model.FeedPostReq;
 import com.green.greengram.application.feed.model.FeedPostRes;
 import com.green.greengram.configuration.util.ImgUploadManager;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Setter
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,7 +37,11 @@ public class FeedService {
 
     public List<FeedGetRes> getFeedList(FeedGetReq req){
         List<FeedGetRes> list = feedMapper.findAll(req);
-
+        //작업!! 피드 당 사진 정보를 가져오는 작업을 해야 한다.
+        for(FeedGetRes res : list) {
+            List<String> pics = feedMapper.findPicsById(res.getId());
+                res.setPics(pics);
+        }
         return list;
     }
 

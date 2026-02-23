@@ -29,8 +29,18 @@
         FROM feed f
         JOIN user u
         ON f.user_id = u.id
-        ORDER BY f.id DESC
+           <if test="profileUserId != null and profileUserId > 0">
+               WHERE f.user_id = #{profileUserId}
+           </if>
+        ORDER BY f.user_id DESC
         LIMIT #{startIdx}, #{size}
+
+    </select>
+
+    <select id="findPicsById">
+        SELECT pic
+        FROM feed_pic
+        WHERE feed_id = #{feedId}
     </select>
 
 </mapper>
