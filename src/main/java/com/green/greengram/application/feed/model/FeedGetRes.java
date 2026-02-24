@@ -1,6 +1,7 @@
 package com.green.greengram.application.feed.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.green.greengram.application.feedcomment.model.FeedCommentGetRes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,9 @@ public class FeedGetRes {
     private long writerUserId;
     private String writerNickName;
     private String writerPic;
-    private int isLike; // X
-    private int likeCount; // X
+    private int isLike; // 내가 이 피드 좋아요를 했나? 했으면 1 아니면 0
+    private int likeCount; // 해당 피드 좋아요 한 수
     private List<String> pics = new ArrayList<>();
+
+    private FeedCommentGetRes comments;
 }

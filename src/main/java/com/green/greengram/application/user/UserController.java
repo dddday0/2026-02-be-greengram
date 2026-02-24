@@ -54,7 +54,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResultResponse<?> getProfileUser(@AuthenticationPrincipal UserPrincipal userPrincipal
-            , @RequestParam("profile_user_id") long profileUserId) {
+            , @RequestParam long profileUserId) {
         UserProfileGetReq req = new UserProfileGetReq( profileUserId, userPrincipal.getSignedUserId() );
         log.info("req: {}", req);
         UserProfileGetRes res = userService.getProfileUser(req);
@@ -66,6 +66,12 @@ public class UserController {
             , @RequestPart MultipartFile pic) {
         String savedFileName = userService.patchProfilePic(userPrincipal.getSignedUserId(), pic);
         return new ResultResponse<>("프로파일 유저 사진 수정", savedFileName);
+    }
+
+    @DeleteMapping("/profile/pic")
+    public ResultResponse<?> patchProfileUserPic(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        userService.deleteProfilePic(userPrincipal.getSignedUserId() );
+        return new ResultResponse<>("프로파일 이미지 삭제 완료", null);
     }
 
 }

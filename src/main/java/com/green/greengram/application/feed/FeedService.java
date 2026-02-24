@@ -4,6 +4,7 @@ import com.green.greengram.application.feed.model.FeedGetReq;
 import com.green.greengram.application.feed.model.FeedGetRes;
 import com.green.greengram.application.feed.model.FeedPostReq;
 import com.green.greengram.application.feed.model.FeedPostRes;
+import com.green.greengram.application.feedcomment.model.FeedCommentGetRes;
 import com.green.greengram.configuration.util.ImgUploadManager;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -41,6 +42,9 @@ public class FeedService {
         for(FeedGetRes res : list) {
             List<String> pics = feedMapper.findPicsById(res.getId());
                 res.setPics(pics);
+
+                //TODO: 댓글 가져오는 select
+                res.setComments( new FeedCommentGetRes() );
         }
         return list;
     }

@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 
 @Slf4j
@@ -99,5 +100,20 @@ public class UserService {
                 .build();
         userMapper.updUser(dto);
         return saveFileName;
+    }
+
+    public void deleteProfilePic(long signedUserId){
+        //폴더 삭제
+        String absoultePath = String.format("%s/user/%d", myFileUtil.fileUploadPath, signedUserId);
+        myFileUtil.deleteDirectory( absoultePath);
+
+
+        //user테이블의 해당 row의 pic 컬럼의 값을 null로 변경
+        UserUpdDto dto = UserUpdDto.builder()
+                        .id(signedUserId)
+                        .pic("")
+                        .build();
+
+        userMapper.updUser(dto);
     }
 }
