@@ -42,9 +42,6 @@ public class FeedService {
         for(FeedGetRes res : list) {
             List<String> pics = feedMapper.findPicsById(res.getId());
                 res.setPics(pics);
-
-                //TODO: 댓글 가져오는 select
-                res.setComments( new FeedCommentGetRes() );
         }
         return list;
     }
