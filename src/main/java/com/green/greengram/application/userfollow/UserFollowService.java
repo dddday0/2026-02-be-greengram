@@ -14,8 +14,7 @@ public class UserFollowService {
     public int postUserFollow(UserFollowReq req){
         return userFollowMapper.save(req);
     }
-
-    public void deleteUserFollow(long signedUserId, long toUserId){
-        userFollowMapper.deletefollow(signedUserId, toUserId);
+    public int deleteUserFollow(UserFollowReq req){
+       return  userFollowMapper.delete(req);
     }
 }

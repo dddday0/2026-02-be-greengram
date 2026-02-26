@@ -27,8 +27,9 @@ public class UserFollowControlloer {
 
     @DeleteMapping
     public ResultResponse<?> deleteUserFollow(@AuthenticationPrincipal UserPrincipal userPrincipal
-                                        ,@RequestParam long toUserId) {
-        userFollowService.deleteUserFollow(userPrincipal.getSignedUserId(), toUserId );
-        return new ResultResponse<>("팔로워 삭제", null);
+                                        ,@ModelAttribute UserFollowReq req ) {
+        req.setFromUserId(userPrincipal.getSignedUserId() );
+        int result = userFollowService.deleteUserFollow(req);
+        return new ResultResponse<>("팔로워 삭제", result);
     }
 }

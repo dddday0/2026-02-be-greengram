@@ -7,9 +7,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class FeedCommentPostReq {
-    private long id;
+public class FeedCommentDeleteReq {
+    private long feedCommentId;
     private long signedUserId;
-    private long feedId;
-    private String comment;
+
+
 }

@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserFollowMapper {
 
     int save(UserFollowReq req);
-    int deletefollow(long signedUserId, long toUserId);
+    int delete(UserFollowReq req);
 }

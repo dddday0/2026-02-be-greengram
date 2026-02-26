@@ -1,9 +1,6 @@
 package com.green.greengram.application.feed;
 
-import com.green.greengram.application.feed.model.FeedGetReq;
-import com.green.greengram.application.feed.model.FeedGetRes;
-import com.green.greengram.application.feed.model.FeedPostReq;
-import com.green.greengram.application.feed.model.FeedPostRes;
+import com.green.greengram.application.feed.model.*;
 import com.green.greengram.configuration.model.ResultResponse;
 import com.green.greengram.configuration.model.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +38,12 @@ public class FeedController {
         return new ResultResponse<>("success", list);
     }
 
-
+    @DeleteMapping
+    public ResultResponse<?> deleteFeed(@AuthenticationPrincipal UserPrincipal userPrincipal
+                                        , @ModelAttribute FeedDeleteReq req){
+        req.setSignedUserId(userPrincipal.getSignedUserId() );
+        log.info("req:{}", req);
+        int result = feedService.deleteFeed(req);
+        return new ResultResponse<>("success:{}", result);
+    }
 }
