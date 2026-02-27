@@ -43,7 +43,7 @@ public class UserController {
             JwtUser jwtUser = new JwtUser( userSignInRes.getSignedUserId() );
             jwtTokenManager.issue(res, jwtUser);
         }
-        return new ResultResponse<>(userSignInRes == null ? "아이디/비밀번호를 확인해 주세요." : "로그인 성공", userSignInRes);
+        return new ResultResponse<>("로그인 성공", userSignInRes);
     }
 
     @PostMapping("/sign-out")
@@ -69,9 +69,8 @@ public class UserController {
     }
 
     @DeleteMapping("/profile/pic")
-    public ResultResponse<?> patchProfileUserPic(@AuthenticationPrincipal UserPrincipal userPrincipal){
-        userService.deleteProfilePic(userPrincipal.getSignedUserId() );
+    public ResultResponse<?> patchProfileUserPic(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        userService.deleteProfilePic( userPrincipal.getSignedUserId() );
         return new ResultResponse<>("프로파일 이미지 삭제 완료", null);
     }
-
 }

@@ -30,11 +30,11 @@
         ) AS flc
         ON flc.feed_id = f.id
         LEFT JOIN (
-            SELECT feed_id, COUNT(feed_id) AS commentCount
-            FROM feed_comment
-            GROUP BY feed_id
+        SELECT feed_id, COUNT(feed_id) AS commentCount
+        FROM feed_comment
+        GROUP BY feed_id
         ) AS fcc
-            ON fcc.feed_id = f.id
+        ON fcc.feed_id = f.id
         <if test=" profileUserId != null and profileUserId > 0 ">
             WHERE f.user_id = #{profileUserId}
         </if>
@@ -44,24 +44,22 @@
 
     <delete id="delete">
         DELETE FROM feed
-            WHERE id = #{feedId}
-                AND user_id = #{signedUserId}
+        WHERE id = #{feedId}
+        AND user_id = #{signedUserId}
     </delete>
-
 
     <delete id="deleteRef">
-        DELETE  fc, fl, fp
+        DELETE fc, fl, fp
         FROM feed f
         LEFT JOIN feed_comment fc
-            ON fc.feed_id = f.id
+        ON fc.feed_id = f.id
         LEFT JOIN feed_like fl
-            ON fl.feed_id = f.id
+        ON fl.feed_id = f.id
         LEFT JOIN feed_pic fp
-            ON fp.feed_id = f.id
+        ON fp.feed_id = f.id
         WHERE f.id = #{feedId}
-         AND f.user_id = #{signedUserId}
+        AND f.user_id = #{signedUserId}
     </delete>
-
 
     <insert id="savePics">
         INSERT INTO feed_pic
@@ -77,4 +75,5 @@
         FROM feed_pic
         WHERE feed_id = #{feedId}
     </select>
+
 </mapper>

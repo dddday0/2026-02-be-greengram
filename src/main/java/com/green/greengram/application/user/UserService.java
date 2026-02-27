@@ -4,11 +4,12 @@ import com.green.greengram.application.user.model.*;
 import com.green.greengram.configuration.util.MyFileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.io.IOException;
 
 @Slf4j
@@ -51,9 +52,10 @@ public class UserService {
 
     public UserSignInRes signIn(UserSignInReq req) {
         UserGetOneRes res = userMapper.findByUid( req.getUid() );
+
         log.info("res: {}", res);
-        if(!passwordEncoder.matches(req.getUpw(), res.getUpw())) {
-            return null;
+        if(res == null || !passwordEncoder.matches(req.getUpw(), res.getUpw())) { //비밀번호가 맞지 않으면?
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디, 비밀번호를 확인해 주세요.");
         }
         //로그인 성공!! 예전에는 AT, RT을 FE전달  >>> 보안 쿠키 이용
 //        JwtUser jwtUser = new JwtUser(res.getId());
@@ -68,15 +70,13 @@ public class UserService {
     }
 
     public UserProfileGetRes getProfileUser (UserProfileGetReq req) {
-        /* followstate, 0 , 1, 2 , 3
-        profile주인, 로그인한 사용자 간의
-        0: 서로 팔로우 안한 상태
-        1: 로그인한 사용자가 profile 주인을 팔로우한 상태
-        2: profile 주인이 로그인한 사용자를 팔로우한 상태
-        3: 서로 팔로우한 상태
-
+        /* followState, 0, 1, 2, 3
+        profile주인, 로그인한 사용자 간의 팔로우 상태값
+        0: 서로 팔로우 안 한 상태
+        1: 로그인한 사용자가 profile주인을 팔로우 한 상태
+        2: profile주인이 로그인한 사용자를 팔로우 한 상태
+        3: 서로 팔로우 한 상태
          */
-
         return userMapper.findProfileUser(req);
     }
 
@@ -104,25 +104,23 @@ public class UserService {
 
         //DB 수정처리
         UserUpdDto dto = UserUpdDto.builder()
-                .id(signedUserId)
-                .pic(saveFileName)
+                .id( signedUserId )
+                .pic( saveFileName )
                 .build();
         userMapper.updUser(dto);
         return saveFileName;
     }
 
-    public void deleteProfilePic(long signedUserId){
-        //폴더 삭제
-        String absoultePath = String.format("%s/user/%d", myFileUtil.fileUploadPath, signedUserId);
-        myFileUtil.deleteDirectory( absoultePath);
-
+    public void deleteProfilePic(long signedUserId) {
+        //폴더 째로 삭제
+        String absolutePath = String.format("%s/user/%d", myFileUtil.fileUploadPath, signedUserId);
+        myFileUtil.deleteDirectory( absolutePath );
 
         //user테이블의 해당 row의 pic 컬럼의 값을 null로 변경
         UserUpdDto dto = UserUpdDto.builder()
-                        .id(signedUserId)
-                        .pic("")
-                        .build();
-
+                .id( signedUserId )
+                .pic( "" )
+                .build();
         userMapper.updUser(dto);
     }
 }

@@ -6,8 +6,10 @@ import com.green.greengram.application.feedcomment.model.FeedCommentGetRes;
 import com.green.greengram.application.feedcomment.model.FeedCommentPostReq;
 import com.green.greengram.configuration.model.ResultResponse;
 import com.green.greengram.configuration.model.UserPrincipal;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +34,7 @@ public class FeedCommentController {
     }
 
     @GetMapping
-    public ResultResponse<?> getFeedCommentList(@ModelAttribute FeedCommentGetReq req) {
+    public ResultResponse<?> getFeedCommentList(@ModelAttribute @Valid FeedCommentGetReq req) {
         log.info("req: {}", req);
         List<FeedCommentGetRes> list = feedCommentService.getFeedCommentList(req);
         return new ResultResponse<>(String.format("%d rows", list.size()), list);
@@ -40,8 +42,9 @@ public class FeedCommentController {
 
     @DeleteMapping
     public ResultResponse<?> deleteFeedComment(@AuthenticationPrincipal UserPrincipal userPrincipal
-                                            ,@ModelAttribute FeedCommentDeleteReq req){
-        req.setSignedUserId(userPrincipal.getSignedUserId() );
+            , @ModelAttribute FeedCommentDeleteReq req) {
+        req.setSignedUserId(userPrincipal.getSignedUserId());
+        log.info("req: {}", req);
         int result = feedCommentService.deleteFeedComment(req);
         return new ResultResponse<>("댓글 삭제 완료", result);
     }
