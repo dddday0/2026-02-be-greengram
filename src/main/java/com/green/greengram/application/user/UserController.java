@@ -5,7 +5,9 @@ import com.green.greengram.configuration.model.JwtUser;
 import com.green.greengram.configuration.model.ResultResponse;
 import com.green.greengram.configuration.model.UserPrincipal;
 import com.green.greengram.configuration.security.JwtTokenManager;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
-    public ResultResponse<?> signIn(HttpServletResponse res, @RequestBody UserSignInReq req) {
+    public ResultResponse<?> signIn(HttpServletResponse res, @RequestBody @Valid UserSignInReq req) {
         log.info("req: {}", req);
         UserSignInRes userSignInRes = userService.signIn(req);
         //보안 쿠키 처리
@@ -52,6 +54,12 @@ public class UserController {
         return new ResultResponse<>("로그아웃 성공", 1);
     }
 
+    @PostMapping("/reissue")
+    public ResultResponse<?> reissue(HttpServletResponse res, HttpServletRequest req){
+        jwtTokenManager.reissue(req, res);
+        return new ResultResponse<>("AT 재발행", null);
+    }
+
     @GetMapping("/profile")
     public ResultResponse<?> getProfileUser(@AuthenticationPrincipal UserPrincipal userPrincipal
             , @RequestParam long profileUserId) {
@@ -63,7 +71,7 @@ public class UserController {
 
     @PatchMapping("/profile/pic")
     public ResultResponse<?> patchProfileUserPic(@AuthenticationPrincipal UserPrincipal userPrincipal
-            , @RequestPart MultipartFile pic) {
+                                                , @RequestPart MultipartFile pic) {
         String savedFileName = userService.patchProfilePic(userPrincipal.getSignedUserId(), pic);
         return new ResultResponse<>("프로파일 유저 사진 수정", savedFileName);
     }

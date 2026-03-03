@@ -23,4 +23,3 @@ public class ValidationError {
         return String.format("field: %s, message: %s", field, message);
     }
 }
-

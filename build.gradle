@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.green'
 version = '0.0.1-SNAPSHOT'
-description = 'greengram'
+description = 'greemgram'
 
 java {
     toolchain {
@@ -33,6 +33,7 @@ dependencies {
 
     // Source: https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4.1
     implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+
 
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-security'

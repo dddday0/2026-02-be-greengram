@@ -24,6 +24,17 @@ public class JwtTokenManager { //인증 처리 총괄
         setAccessTokenInCookie(res, jwtUser);
         setRefreshTokenInCookie(res, jwtUser);
     }
+
+    public void reissue(HttpServletRequest req, HttpServletResponse res){
+        //req에서 RT를 얻어야 한다.
+      String refreshToken =  getRefreshTokenFromCookie(req);
+
+      //RT를 이용하여 JwtUser 객체를 만든다.
+        JwtUser jwtUser = jwtTokenProvider.getJwtUserFromToken(refreshToken);
+
+        //JwtUser를 이용하여 AT를 만들어 cookie 담아주세요.
+        setAccessTokenInCookie(res, jwtUser);
+    }
     public void deleteAccessTokenInCookie(HttpServletResponse res){
         myCookieUtil.deleteCookie(res, constJwt.getAccessTokenCookieName(), constJwt.getAccessTokenCookiePath());
     }
@@ -70,6 +81,16 @@ public class JwtTokenManager { //인증 처리 총괄
     //AT를 쿠키에서 꺼낸다
     public String getAccessTokenFromCookie(HttpServletRequest req) {
         return myCookieUtil.getValue(req, constJwt.getAccessTokenCookieName());
+    }
+
+    //RT를 쿠키에서 꺼낸다.
+    public String getRefreshTokenFromCookie(HttpServletRequest req){
+        return myCookieUtil.getValue(req, constJwt.getRefreshTokenCookieName());
+    }
+
+    //토큰을 활용하여 JwtUser를 만든다.
+    public JwtUser getJwtUserFromToken(String token){
+        return jwtTokenProvider.getJwtUserFromToken(token);
     }
 
     //시큐리티에서 로그인 인정을 할 때 이 객체를 Security Context Holder(공간)에 담으면
