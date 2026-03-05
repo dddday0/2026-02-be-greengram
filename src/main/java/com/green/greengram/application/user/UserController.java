@@ -26,6 +26,7 @@ public class UserController {
      * 다르게 받아야 한다. @RequestPart로 받아야 한다.
      * req는 파일을 제외한 데이터(uid, upw, nm 데이터들)
      * pic은 프로파일 이미지 파일
+     * required = false 속성이 없다면 반드시 요청 때 Data를 보내주어야 한다.
      *  */
     @PostMapping("/sign-up")
     public ResultResponse<?> signUp(@RequestPart UserSignUpReq req
@@ -38,7 +39,7 @@ public class UserController {
 
     @PostMapping("/sign-in")
     public ResultResponse<?> signIn(HttpServletResponse res, @RequestBody @Valid UserSignInReq req) {
-        log.info("req: {}", req);
+        log.info("sign-in ================= req: {}", req);
         UserSignInRes userSignInRes = userService.signIn(req);
         //보안 쿠키 처리
         if(userSignInRes != null) {
@@ -55,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/reissue")
-    public ResultResponse<?> reissue(HttpServletResponse res, HttpServletRequest req){
+    public ResultResponse<?> reissue(HttpServletResponse res, HttpServletRequest req) {
         jwtTokenManager.reissue(req, res);
         return new ResultResponse<>("AT 재발행", null);
     }
@@ -71,7 +72,7 @@ public class UserController {
 
     @PatchMapping("/profile/pic")
     public ResultResponse<?> patchProfileUserPic(@AuthenticationPrincipal UserPrincipal userPrincipal
-                                                , @RequestPart MultipartFile pic) {
+            , @RequestPart MultipartFile pic) {
         String savedFileName = userService.patchProfilePic(userPrincipal.getSignedUserId(), pic);
         return new ResultResponse<>("프로파일 유저 사진 수정", savedFileName);
     }

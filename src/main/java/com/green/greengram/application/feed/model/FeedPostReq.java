@@ -13,5 +13,7 @@ public class FeedPostReq {
     private long signedUserId;
     private long feedId;
 
-
+    public void setSignedUserId(long signedUserId) {
+        this.signedUserId = signedUserId;
+    }
 }

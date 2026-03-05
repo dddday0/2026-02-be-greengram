@@ -17,8 +17,8 @@ public interface FeedMapper {
     int deleteRef(FeedDeleteReq req);
 
     int savePics(@Param("feedId") long feedId
-                ,@Param("picSavedNames") List<String> picSavedNames);
-    List<String> findPicsById(long feedId);
+            , @Param("picSavedNames") List<String> picSavedNames);
 
+    List<String> findPicsById(long feedId);
 
 }
